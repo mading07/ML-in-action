@@ -1,0 +1,52 @@
+# 定义输入数据
+tx = [[3,3],[4,3],[1,1]]
+ty = [+1,+1,-1]
+
+# 定义原始形式的感知机
+class Perceptron():
+    def __init__(self):
+        self.learning_rate = 1
+
+    def train(self,x,y):
+        # 定义w和b
+        w = np.array([1]*len(x[0]))
+        b = 1
+        print ("w，b初始值：")
+        print (w,b)
+
+        # 正确个数
+        correct_flag = [0]*len(x)
+
+        while 1:
+            # 从训练集中拿一个数据
+            index = random.randint(0, len(x) - 1)
+            if correct_flag[index]:
+                continue
+            X = np.array(x[index])
+            Y = y[index]
+
+            # 是否分类正确
+            temp = Y*(np.sum(w*X) + b)
+            if temp > 0:
+                correct_flag[index] = 1
+                # print("点(%d,%d)分类正确" % (X[0],X[1]))
+                if np.sum(correct_flag) >= len(x):
+                    print("所有点分类正确，结束迭代")
+                    break
+            else:
+                correct_flag = [0]*len(x)
+                print("点(%d,%d)分类错误" % (X[0],X[1]))
+                w = w + self.learning_rate*Y*X
+                b = b + self.learning_rate*Y
+                print ("对w，b进行调整：")
+                print (w,b)
+
+        self.w = w
+        self.b = b
+
+    def getWb(self):
+        return self.w,self.b
+
+
+p = Perceptron()
+p.train(tx,ty)
